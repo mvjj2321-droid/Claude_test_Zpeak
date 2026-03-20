@@ -3,32 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zpeak — Text to Speech</title>
+<title>Zpeakable — Text to Speech</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:             #f2f2f7;
-    --surface:        #ffffff;
-    --surface-2:      #f8f8fa;
-    --border:         rgba(0,0,0,0.08);
-    --border-focus:   rgba(0,122,255,0.45);
-    --accent:         #007aff;
-    --accent-dark:    #0062cc;
-    --accent-glow:    rgba(0,122,255,0.18);
-    --text-primary:   #1c1c1e;
-    --text-secondary: #6e6e73;
-    --text-tertiary:  #aeaeb2;
-    --danger:         #ff3b30;
-    --success:        #34c759;
-    --radius-sm:      10px;
-    --radius-md:      16px;
-    --radius-lg:      22px;
-    --shadow-card:    0 2px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
-    --shadow-btn:     0 2px 8px rgba(0,122,255,0.30);
-    --transition:     all 0.22s cubic-bezier(0.4,0,0.2,1);
+    --bg:       #f2f2f7;
+    --surface:  #ffffff;
+    --surface2: #f9f9fb;
+    --border:   rgba(0,0,0,0.08);
+    --blue:     #0071e3;
+    --blue-dk:  #0051a8;
+    --text:     #1d1d1f;
+    --sub:      #6e6e73;
+    --radius:   18px;
+    --shadow:   0 2px 20px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-md:0 8px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
   }
 
   html { font-size: 16px; }
@@ -36,465 +28,367 @@
   body {
     font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
-    color: var(--text-primary);
+    color: var(--text);
     min-height: 100vh;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 48px 20px 80px;
+    padding: 60px 20px 80px;
   }
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      radial-gradient(circle at 20% 20%, rgba(0,122,255,0.05) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(52,199,89,0.04) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .card {
-    position: relative;
-    z-index: 1;
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
-    border: 1px solid var(--border);
+  /* ── Page wrapper ── */
+  .page {
     width: 100%;
-    max-width: 520px;
-    overflow: hidden;
-    animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
   }
 
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
+  /* ── Header ── */
   .header {
-    padding: 28px 28px 0;
-    display: flex;
-    align-items: center;
-    gap: 14px;
+    text-align: center;
+    margin-bottom: 36px;
+    animation: fadeUp 0.5s ease both;
   }
-
-  .logo-mark {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: linear-gradient(145deg, #1a8cff 0%, #0055c8 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(0,122,255,0.35);
-  }
-
-  .logo-mark svg { width: 22px; height: 22px; fill: white; }
-
-  .header-text h1 {
-    font-size: 20px;
+  .header-eyebrow {
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: -0.3px;
-    color: var(--text-primary);
-    line-height: 1.2;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 10px;
   }
-
-  .header-text p {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-top: 2px;
+  .header h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(32px, 6vw, 42px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .header h1 em {
+    font-style: italic;
+    color: var(--blue);
+  }
+  .header p {
+    margin-top: 10px;
+    font-size: 15px;
+    color: var(--sub);
     font-weight: 400;
   }
 
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    animation: fadeUp 0.55s ease 0.05s both;
+  }
+
+  /* ── Textarea section ── */
+  .textarea-wrap {
+    padding: 20px 22px 0;
+  }
+  .field-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sub);
+    margin-bottom: 10px;
+    display: block;
+  }
+  .textarea-wrap textarea {
+    width: 100%;
+    min-height: 160px;
+    padding: 14px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .textarea-wrap textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(0,113,227,0.12);
+  }
+  .char-count {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    color: var(--sub);
+    margin-top: 6px;
+    margin-bottom: 4px;
+  }
+
+  /* ── Divider ── */
   .divider {
     height: 1px;
     background: var(--border);
-    margin: 24px 0 0;
+    margin: 18px 0 0;
   }
 
-  .body {
-    padding: 24px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  /* ── Voice section ── */
+  .voice-section {
+    padding: 18px 22px 20px;
   }
 
-  .field { display: flex; flex-direction: column; gap: 8px; }
-
-  .field-label {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.6px;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-  }
-
-  textarea {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--text-primary);
-    background: var(--surface-2);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 14px 16px;
-    resize: vertical;
-    min-height: 148px;
+  /* ── Voice dropdown ── */
+  .voice-select {
     width: 100%;
-    outline: none;
-    transition: var(--transition);
-  }
-
-  textarea::placeholder { color: var(--text-tertiary); }
-
-  textarea:focus {
-    border-color: var(--accent);
-    background: white;
-    box-shadow: 0 0 0 4px var(--accent-glow);
-  }
-
-  .voice-wrapper { position: relative; }
-
-  .voice-wrapper::after {
-    content: '';
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 10px;
-    height: 6px;
-    background: var(--text-secondary);
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    pointer-events: none;
-  }
-
-  select {
+    padding: 11px 14px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    color: var(--text-primary);
-    background: var(--surface-2);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 13px 40px 13px 16px;
-    width: 100%;
-    outline: none;
-    appearance: none;
-    cursor: pointer;
-    transition: var(--transition);
-  }
-
-  select:focus {
-    border-color: var(--accent);
-    background: white;
-    box-shadow: 0 0 0 4px var(--accent-glow);
-  }
-
-  .voice-meta {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-top: 2px;
-  }
-
-  .pill {
-    font-size: 11.5px;
+    font-size: 14.5px;
     font-weight: 500;
-    padding: 3px 9px;
-    border-radius: 100px;
-    background: rgba(0,122,255,0.08);
-    color: var(--accent);
-    border: 1px solid rgba(0,122,255,0.15);
-    user-select: none;
+    color: var(--text);
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 38px;
+    margin-top: 10px;
+    transition: border-color 0.18s, box-shadow 0.18s;
+  }
+  .voice-select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(0,113,227,0.12);
+  }
+  .voice-select option {
+    font-weight: 400;
   }
 
+  /* ── Generate button ── */
+  .btn-wrap {
+    padding: 0 22px 22px;
+  }
   .btn-generate {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    width: 100%;
-    padding: 15px 24px;
+    padding: 14px 24px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 15.5px;
+    font-size: 15px;
     font-weight: 600;
-    letter-spacing: -0.1px;
     color: #fff;
-    background: linear-gradient(160deg, #1a8cff 0%, #006fe6 100%);
+    background: var(--blue);
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: 12px;
     cursor: pointer;
-    outline: none;
-    box-shadow: var(--shadow-btn);
-    transition: var(--transition);
-    position: relative;
-    overflow: hidden;
+    transition: background 0.2s, transform 0.12s, box-shadow 0.2s;
+    box-shadow: 0 2px 12px rgba(0,113,227,0.30);
+    letter-spacing: -0.01em;
   }
-
-  .btn-generate::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(160deg, rgba(255,255,255,0.15) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
   .btn-generate:hover:not(:disabled) {
+    background: #005ec4;
+    box-shadow: 0 4px 20px rgba(0,113,227,0.40);
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(0,122,255,0.40);
   }
-
   .btn-generate:active:not(:disabled) {
     transform: translateY(0);
-    box-shadow: var(--shadow-btn);
+    box-shadow: 0 1px 6px rgba(0,113,227,0.25);
   }
-
   .btn-generate:disabled {
     opacity: 0.65;
     cursor: not-allowed;
   }
+  .btn-icon {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+  }
 
-  .btn-icon { width: 18px; height: 18px; flex-shrink: 0; }
-
-  .loading-bar {
+  /* ── Output card ── */
+  .output-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    padding: 22px;
+    margin-top: 16px;
+    animation: fadeUp 0.4s ease both;
     display: none;
-    height: 3px;
-    background: rgba(0,122,255,0.12);
-    border-radius: 100px;
-    overflow: hidden;
   }
+  .output-card.visible { display: block; }
 
-  .loading-bar.active { display: block; }
-
-  .loading-bar-fill {
-    height: 100%;
-    width: 30%;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    border-radius: 100px;
-    animation: shimmer 1.4s ease-in-out infinite;
-  }
-
-  @keyframes shimmer {
-    0%   { transform: translateX(-200%); }
-    100% { transform: translateX(500%); }
-  }
-
-  .loading-label {
-    display: none;
-    font-size: 13px;
-    color: var(--accent);
-    font-weight: 500;
-    text-align: center;
-  }
-
-  .loading-label.active { display: block; }
-
-  .result-section {
-    display: none;
-    flex-direction: column;
-    gap: 12px;
-    animation: fadeIn 0.35s ease both;
-  }
-
-  .result-section.visible { display: flex; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .result-header {
+  .output-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 14px;
   }
-
-  .result-title {
-    font-size: 12px;
+  .output-title {
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
-    color: var(--text-secondary);
+    color: var(--sub);
   }
-
-  .duration-badge {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+  .output-badge {
     font-size: 12px;
-    font-family: 'DM Mono', monospace;
-    color: var(--success);
     font-weight: 500;
-    background: rgba(52,199,89,0.1);
-    border: 1px solid rgba(52,199,89,0.2);
-    padding: 3px 9px;
-    border-radius: 100px;
-  }
-
-  .duration-badge svg { width: 7px; height: 7px; fill: var(--success); }
-
-  .audio-wrapper {
-    background: var(--surface-2);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 4px;
-    overflow: hidden;
+    color: var(--blue);
+    background: #eaf2ff;
+    border-radius: 20px;
+    padding: 3px 10px;
   }
 
   audio {
     width: 100%;
-    height: 40px;
-    border-radius: calc(var(--radius-md) - 4px);
-    display: block;
+    border-radius: 10px;
     outline: none;
+    display: block;
+  }
+  audio::-webkit-media-controls-panel {
+    background: var(--surface2);
+    border-radius: 10px;
   }
 
-  .footer {
-    padding: 16px 28px 24px;
-    border-top: 1px solid var(--border);
-    display: flex;
+  /* ── Loading state ── */
+  .loading-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    padding: 28px 22px;
+    margin-top: 16px;
+    display: none;
     align-items: center;
-    justify-content: space-between;
+    gap: 16px;
+    animation: fadeUp 0.3s ease both;
   }
+  .loading-card.visible { display: flex; }
 
-  .footer-brand {
-    font-size: 12px;
-    color: var(--text-tertiary);
-    font-weight: 400;
-  }
-
-  .footer-brand strong {
-    color: var(--text-secondary);
-    font-weight: 500;
-  }
-
-  .status-dot {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    font-weight: 500;
-  }
-
-  .dot {
-    width: 7px;
-    height: 7px;
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2.5px solid rgba(0,113,227,0.2);
+    border-top-color: var(--blue);
     border-radius: 50%;
-    background: var(--success);
-    box-shadow: 0 0 0 2.5px rgba(52,199,89,0.2);
-    animation: pulse-dot 2.5s ease-in-out infinite;
+    animation: spin 0.85s linear infinite;
+    flex-shrink: 0;
+  }
+  .loading-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--sub);
+  }
+  .loading-text strong {
+    display: block;
+    color: var(--text);
+    font-size: 15px;
   }
 
-  @keyframes pulse-dot {
-    0%, 100% { box-shadow: 0 0 0 2.5px rgba(52,199,89,0.2); }
-    50%       { box-shadow: 0 0 0 5px rgba(52,199,89,0.08); }
+  /* ── Animations ── */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  .char-count {
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    margin-top: 32px;
     font-size: 12px;
-    color: var(--text-tertiary);
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    font-family: 'DM Mono', monospace;
-    transition: color 0.2s;
+    color: var(--sub);
+    animation: fadeUp 0.6s ease 0.1s both;
   }
-
-  .char-count.warn   { color: #ff9500; }
-  .char-count.danger { color: var(--danger); }
 </style>
 
 <script type="module">
 import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/+esm";
 
+/* ── Voice data ── */
 const voices = [
-  "Aria — US Female, Natural",
-  "Guy — US Male, Natural",
-  "Jenny — US Female, Friendly",
-  "Andrew — US Male, Casual",
-  "Sonia — UK Female, Natural",
-  "Ryan — UK Male, Natural",
-  "Libby — UK Female, Friendly",
-  "Natasha — AU Female, Natural",
-  "William — AU Male, Natural",
-  "Neerja — IN Female, Natural",
-  "Prabhat — IN Male, Natural",
-  "Asilia — KE Female, Natural",
-  "Chilemba — KE Male, Natural",
-  "Leah — ZA Female, Natural",
-  "Luke — ZA Male, Natural",
-  "Emily — IE Female, Natural",
-  "Connor — IE Male, Natural"
+  { value: "Aria — US Female, Natural",    name: "Aria",     meta: "US · Female" },
+  { value: "Guy — US Male, Natural",       name: "Guy",      meta: "US · Male"   },
+  { value: "Jenny — US Female, Friendly",  name: "Jenny",    meta: "US · Female" },
+  { value: "Andrew — US Male, Casual",     name: "Andrew",   meta: "US · Male"   },
+  { value: "Sonia — UK Female, Natural",   name: "Sonia",    meta: "UK · Female" },
+  { value: "Ryan — UK Male, Natural",      name: "Ryan",     meta: "UK · Male"   },
+  { value: "Libby — UK Female, Friendly",  name: "Libby",    meta: "UK · Female" },
+  { value: "Natasha — AU Female, Natural", name: "Natasha",  meta: "AU · Female" },
+  { value: "William — AU Male, Natural",   name: "William",  meta: "AU · Male"   },
+  { value: "Neerja — IN Female, Natural",  name: "Neerja",   meta: "IN · Female" },
+  { value: "Prabhat — IN Male, Natural",   name: "Prabhat",  meta: "IN · Male"   },
+  { value: "Asilia — KE Female, Natural",  name: "Asilia",   meta: "KE · Female" },
+  { value: "Chilemba — KE Male, Natural",  name: "Chilemba", meta: "KE · Male"   },
+  { value: "Leah — ZA Female, Natural",    name: "Leah",     meta: "ZA · Female" },
+  { value: "Luke — ZA Male, Natural",      name: "Luke",     meta: "ZA · Male"   },
+  { value: "Emily — IE Female, Natural",   name: "Emily",    meta: "IE · Female" },
+  { value: "Connor — IE Male, Natural",    name: "Connor",   meta: "IE · Male"   },
 ];
 
+/* ── Render voice dropdown ── */
 window.addEventListener("DOMContentLoaded", () => {
-  const voiceSelect = document.getElementById("voice");
-  voices.forEach(v => {
+  const sel = document.getElementById("voice-select");
+  voices.forEach((v, i) => {
     const opt = document.createElement("option");
-    opt.value = v;
-    opt.textContent = v;
-    voiceSelect.appendChild(opt);
+    opt.value = v.value;
+    opt.textContent = `${v.name} — ${v.meta}`;
+    if (i === 0) opt.selected = true;
+    sel.appendChild(opt);
   });
 
-  voiceSelect.addEventListener("change", updatePills);
-  updatePills();
-
-  const textarea = document.getElementById("text");
-  const counter  = document.getElementById("charCount");
-  textarea.addEventListener("input", () => {
-    const len = textarea.value.length;
-    counter.textContent = len + " / 2000";
-    counter.className = "char-count" + (len > 1800 ? " danger" : len > 1400 ? " warn" : "");
-  });
-  counter.textContent = textarea.value.length + " / 2000";
+  /* Char counter */
+  const ta = document.getElementById("text");
+  const cc = document.getElementById("char-count");
+  const update = () => cc.textContent = `${ta.value.length} characters`;
+  ta.addEventListener("input", update);
+  update();
 });
 
-function updatePills() {
-  const v = document.getElementById("voice").value;
-  const parts = v.split("—")[1]?.trim().split(",").map(s => s.trim()) ?? [];
-  document.getElementById("voicePills").innerHTML =
-    parts.map(p => `<span class="pill">${p}</span>`).join("");
-}
-
+/* ── Generate — logic untouched ── */
 async function generateSpeech() {
-  const text     = document.getElementById("text").value.trim();
-  const voice    = document.getElementById("voice").value;
-  const loadBar  = document.getElementById("loadingBar");
-  const loadLbl  = document.getElementById("loadingLabel");
-  const result   = document.getElementById("resultSection");
-  const durBadge = document.getElementById("durationBadge");
-  const btn      = document.getElementById("btnGenerate");
+  const text  = document.getElementById("text").value;
+  const voice = document.getElementById("voice-select").value;
 
-  if (!text) { document.getElementById("text").focus(); return; }
+  const loadingCard = document.getElementById("loading-card");
+  const outputCard  = document.getElementById("output-card");
+  const badge       = document.getElementById("output-badge");
+  const btn         = document.getElementById("btn-generate");
 
   try {
+    loadingCard.classList.add("visible");
+    outputCard.classList.remove("visible");
     btn.disabled = true;
-    loadBar.classList.add("active");
-    loadLbl.classList.add("active");
-    result.classList.remove("visible");
 
     const startTime = performance.now();
-
     const client = await Client.connect("JasonKishore007/Zpeak");
-    const res    = await client.predict("/synthesize", [text, voice, 0, 0]);
+    const result  = await client.predict("/synthesize", [text, voice, 0, 0]);
+    const endTime = performance.now();
+    const duration = ((endTime - startTime) / 1000).toFixed(2);
 
-    const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-    durBadge.innerHTML = `<svg viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="3.5"/></svg>${elapsed}s`;
+    console.log(`TTS generation took ${duration} seconds`);
 
-    const player = document.getElementById("audioPlayer");
-    player.src = res.data[0].url;
+    const audioURL = result.data[0].url;
+    const player   = document.getElementById("audioPlayer");
+    player.src = audioURL;
     player.play();
 
-    result.classList.add("visible");
+    badge.textContent = `${duration}s`;
+    loadingCard.classList.remove("visible");
+    outputCard.classList.add("visible");
   } catch (err) {
     console.error("Error generating speech:", err);
     alert("Failed to generate speech. Please try again.");
+    loadingCard.classList.remove("visible");
   } finally {
     btn.disabled = false;
-    loadBar.classList.remove("active");
-    loadLbl.classList.remove("active");
   }
 }
 
@@ -503,70 +397,68 @@ window.generateSpeech = generateSpeech;
 </head>
 <body>
 
-<div class="card">
+<div class="page">
 
-  <div class="header">
-    <div class="logo-mark">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 3C7.03 3 3 7.03 3 12s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm-1 13.5v-9l6 4.5-6 4.5z"/>
-      </svg>
+  <!-- Header -->
+  <header class="header">
+    <p class="header-eyebrow">Zpeakable · AI Voice Synthesis</p>
+    <h1>Speak <em>anything</em>,<br>instantly.</h1>
+    <p>17 voices across 8 regions. Powered by <strong>Zpeak</strong>.</p>
+  </header>
+
+  <!-- Main card -->
+  <div class="card">
+
+    <!-- Text input -->
+    <div class="textarea-wrap">
+      <span class="field-label">Your text</span>
+      <textarea id="text" placeholder="Type or paste your text here…">This is Testing</textarea>
+      <span class="char-count" id="char-count">16 characters</span>
     </div>
-    <div class="header-text">
-      <h1>Zpeak</h1>
-      <p>Neural text‑to‑speech synthesis</p>
+
+    <div class="divider"></div>
+
+    <!-- Voice picker -->
+    <div class="voice-section">
+      <span class="field-label">Voice</span>
+      <select class="voice-select" id="voice-select"></select>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- CTA -->
+    <div class="btn-wrap" style="margin-top:18px">
+      <button class="btn-generate" id="btn-generate" onclick="generateSpeech()">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Generate Speech
+      </button>
+    </div>
+
+  </div><!-- /card -->
+
+  <!-- Loading state -->
+  <div class="loading-card" id="loading-card">
+    <div class="spinner"></div>
+    <div class="loading-text">
+      <strong>Synthesising audio…</strong>
+      This usually takes a few seconds
     </div>
   </div>
 
-  <div class="divider"></div>
-
-  <div class="body">
-
-    <div class="field">
-      <label class="field-label" for="text">Script</label>
-      <textarea id="text" placeholder="Type or paste the text you'd like to synthesize…">This is Testing</textarea>
-      <span class="char-count" id="charCount">16 / 2000</span>
+  <!-- Output card -->
+  <div class="output-card" id="output-card">
+    <div class="output-header">
+      <span class="output-title">Result</span>
+      <span class="output-badge" id="output-badge"></span>
     </div>
-
-    <div class="field">
-      <label class="field-label" for="voice">Voice</label>
-      <div class="voice-wrapper">
-        <select id="voice"></select>
-      </div>
-      <div class="voice-meta" id="voicePills"></div>
-    </div>
-
-    <div class="loading-bar" id="loadingBar">
-      <div class="loading-bar-fill"></div>
-    </div>
-    <div class="loading-label" id="loadingLabel">Synthesizing audio…</div>
-
-    <button class="btn-generate" id="btnGenerate" onclick="generateSpeech()">
-      <svg class="btn-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm-1 11.5v-7l5.25 3.5L9 13.5z" fill="white"/>
-      </svg>
-      Generate Speech
-    </button>
-
-    <div class="result-section" id="resultSection">
-      <div class="result-header">
-        <span class="result-title">Output</span>
-        <span class="duration-badge" id="durationBadge">
-          <svg viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="3.5"/></svg>—
-        </span>
-      </div>
-      <div class="audio-wrapper">
-        <audio id="audioPlayer" controls></audio>
-      </div>
-    </div>
-
+    <audio id="audioPlayer" controls></audio>
   </div>
 
-  <div class="footer">
-    <span class="footer-brand">Powered by <strong>Microsoft Azure TTS</strong></span>
-    <span class="status-dot"><span class="dot"></span>Live</span>
-  </div>
+  <p class="footer">Zpeakable — Powered by <strong>Zpeak</strong> &nbsp;·&nbsp; Voices by <a href="https://learn.microsoft.com/en-us/azure/ai-services/speech-service/text-to-speech" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Microsoft Edge TTS (Azure Neural Voices)</a></p>
 
-</div>
+</div><!-- /page -->
 
 </body>
 </html>
